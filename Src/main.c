@@ -53,6 +53,7 @@
 
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc.h"
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -72,14 +73,16 @@ static void MX_NVIC_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+  uint8_t Tx_Buff[100] = "stm32 usb_cdc test\r\n";
+	uint8_t Rx_Buff[100] = {0};
+	uint8_t Send_Flag = 1;
 /* USER CODE END 0 */
 
 int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  uint8_t buff[20] = "test";
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -106,6 +109,7 @@ int main(void)
   MX_NVIC_Init();
 
   /* USER CODE BEGIN 2 */
+	USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)&Rx_Buff);
 
   /* USER CODE END 2 */
 
@@ -114,12 +118,24 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-USBD_CDC_SetTxBuffer(&hUsbDeviceHS, (uint8_t*)&buff, 5);
 
-    
-
-    USBD_CDC_TransmitPacket(&hUsbDeviceHS);
-		HAL_Delay(1000);
+/*		USBD_CDC_SetTxBuffer(&hUsbDeviceHS, (uint8_t*)&Tx_Buff, sizeof(Tx_Buff));
+    USBD_CDC_TransmitPacket(&hUsbDeviceHS);*/
+		if(Send_Flag)
+		{
+			CDC_Transmit_HS((uint8_t*)&Tx_Buff, sizeof(Tx_Buff));	
+			Send_Flag = 0;
+		}
+		
+		USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)&Rx_Buff);
+		USBD_CDC_ReceivePacket(&hUsbDeviceHS);
+		if(Rx_Buff[0])
+		{
+			sprintf(Tx_Buff,"Received:%s\r\n",Rx_Buff);
+			memset(Rx_Buff,0,30);
+			Send_Flag = 1;
+		}
+	//	HAL_Delay(1000);
   /* USER CODE BEGIN 3 */
 
   }
