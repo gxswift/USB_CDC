@@ -85,38 +85,38 @@ ARM Macro Assembler    Page 2
    45 00000000         ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
    46 00000000         ; </h>
    47 00000000         
-   48 00000000 00001500 
+   48 00000000 00002000 
                        Stack_Size
-                               EQU              0x1500
+                               EQU              0x2000
    49 00000000         
    50 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
 =3
    51 00000000         Stack_Mem
                                SPACE            Stack_Size
-   52 00001500         __initial_sp
-   53 00001500         
-   54 00001500         
-   55 00001500         ; <h> Heap Configuration
-   56 00001500         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-   57 00001500         ; </h>
-   58 00001500         
-   59 00001500 00000600 
+   52 00002000         __initial_sp
+   53 00002000         
+   54 00002000         
+   55 00002000         ; <h> Heap Configuration
+   56 00002000         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   57 00002000         ; </h>
+   58 00002000         
+   59 00002000 00002000 
                        Heap_Size
-                               EQU              0x600
-   60 00001500         
-   61 00001500                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+                               EQU              0x2000
+   60 00002000         
+   61 00002000                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
 3
    62 00000000         __heap_base
    63 00000000         Heap_Mem
                                SPACE            Heap_Size
-   64 00000600         __heap_limit
-   65 00000600         
-   66 00000600                 PRESERVE8
-   67 00000600                 THUMB
-   68 00000600         
-   69 00000600         
-   70 00000600         ; Vector Table Mapped to Address 0 at Reset
-   71 00000600                 AREA             RESET, DATA, READONLY
+   64 00002000         __heap_limit
+   65 00002000         
+   66 00002000                 PRESERVE8
+   67 00002000                 THUMB
+   68 00002000         
+   69 00002000         
+   70 00002000         ; Vector Table Mapped to Address 0 at Reset
+   71 00002000                 AREA             RESET, DATA, READONLY
    72 00000000                 EXPORT           __Vectors
    73 00000000                 EXPORT           __Vectors_End
    74 00000000                 EXPORT           __Vectors_Size
@@ -904,18 +904,18 @@ ARM Macro Assembler    Page 14
               00000000 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
-erwork --depend=usb_test\startup_stm32f429xx.d -ousb_test\startup_stm32f429xx.o
- -IE:\Project\Practise\USB_CDC\MDK-ARM\RTE -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.2.
-0\CMSIS\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.7.0 --predefine="__M
-ICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 514" --predefine="_RTE_ SET
+erwork --depend=cdc\startup_stm32f429xx.d -ocdc\startup_stm32f429xx.o -I.\RTE\_
+CDC -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include -IC:\Keil_v5\ARM\PACK\K
+eil\STM32F4xx_DFP\2.7.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include --predefine="
+__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 523" --predefine="_RTE_ 
 
 
 
 ARM Macro Assembler    Page 15 
 
 
-A 1" --predefine="STM32F429xx SETA 1" --list=startup_stm32f429xx.lst startup_st
-m32f429xx.s
+SETA 1" --predefine="STM32F429xx SETA 1" --list=startup_stm32f429xx.lst startup
+_stm32f429xx.s
 
 
 
@@ -938,7 +938,7 @@ Symbol: Stack_Mem
    Uses
       None
 Comment: Stack_Mem unused
-__initial_sp 00001500
+__initial_sp 00002000
 
 Symbol: __initial_sp
    Definitions
@@ -978,7 +978,7 @@ Symbol: __heap_base
    Uses
       At line 443 in file startup_stm32f429xx.s
 Comment: __heap_base used once
-__heap_limit 00000600
+__heap_limit 00002000
 
 Symbol: __heap_limit
    Definitions
@@ -2039,7 +2039,7 @@ Symbol: WWDG_IRQHandler
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Absolute symbols
 
-Heap_Size 00000600
+Heap_Size 00002000
 
 Symbol: Heap_Size
    Definitions
@@ -2047,7 +2047,7 @@ Symbol: Heap_Size
    Uses
       At line 63 in file startup_stm32f429xx.s
 Comment: Heap_Size used once
-Stack_Size 00001500
+Stack_Size 00002000
 
 Symbol: Stack_Size
    Definitions

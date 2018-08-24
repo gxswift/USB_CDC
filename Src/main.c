@@ -9,7 +9,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -48,11 +48,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
+#include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
 
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc.h"
+#include "usbd_desc.h"
+#include "usbd_ctlreq.h"
 #include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
@@ -60,12 +63,11 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-  extern USBD_HandleTypeDef hUsbDeviceHS;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-static void MX_NVIC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -104,12 +106,9 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
-
-  /* Initialize interrupts */
-  MX_NVIC_Init();
+  MX_USART1_UART_Init();
 
   /* USER CODE BEGIN 2 */
-	USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)&Rx_Buff);
 
   /* USER CODE END 2 */
 
@@ -119,25 +118,25 @@ int main(void)
   {
   /* USER CODE END WHILE */
 
-/*		USBD_CDC_SetTxBuffer(&hUsbDeviceHS, (uint8_t*)&Tx_Buff, sizeof(Tx_Buff));
-    USBD_CDC_TransmitPacket(&hUsbDeviceHS);*/
-		if(Send_Flag)
-		{
-			CDC_Transmit_HS((uint8_t*)&Tx_Buff, sizeof(Tx_Buff));	
-			Send_Flag = 0;
-		}
-		
+  /* USER CODE BEGIN 3 */
+//		if(Send_Flag)
+//		{
+			CDC_Transmit_HS((uint8_t*)&Tx_Buff, strlen((char *)Tx_Buff));	
+		HAL_Delay(1000);
+//			Send_Flag = 0;
+//		}
+		/*
 		USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)&Rx_Buff);
+
 		USBD_CDC_ReceivePacket(&hUsbDeviceHS);
+
 		if(Rx_Buff[0])
 		{
-			sprintf(Tx_Buff,"Received:%s\r\n",Rx_Buff);
-			memset(Rx_Buff,0,30);
+			sprintf((char *)Tx_Buff,"Received:%s\r\n",Rx_Buff);
+			memset(Rx_Buff,0,40);
 			Send_Flag = 1;
 		}
-	//	HAL_Delay(1000);
-  /* USER CODE BEGIN 3 */
-
+		*/
   }
   /* USER CODE END 3 */
 
@@ -163,7 +162,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLM = 25;
   RCC_OscInitStruct.PLL.PLLN = 336;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 7;
@@ -196,15 +195,6 @@ void SystemClock_Config(void)
 
   /* SysTick_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
-}
-
-/** NVIC Configuration
-*/
-static void MX_NVIC_Init(void)
-{
-  /* OTG_HS_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(OTG_HS_IRQn, 1, 0);
-  HAL_NVIC_EnableIRQ(OTG_HS_IRQn);
 }
 
 /* USER CODE BEGIN 4 */

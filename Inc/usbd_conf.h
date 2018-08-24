@@ -10,7 +10,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2017 STMicroelectronics International N.V. 
+  * Copyright (c) 2018 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -77,7 +77,7 @@
 /*---------- -----------*/
 #define USBD_MAX_NUM_CONFIGURATION     1
 /*---------- -----------*/
-#define USBD_MAX_STR_DESC_SIZ     50
+#define USBD_MAX_STR_DESC_SIZ     512
 /*---------- -----------*/
 #define USBD_SUPPORT_USER_STRING     0
 /*---------- -----------*/
@@ -87,7 +87,7 @@
 /*---------- -----------*/
 #define USBD_SELF_POWERED     1
 /*---------- -----------*/
-#define USBD_CDC_INTERVAL     5
+#define USBD_CDC_INTERVAL     1000
 
 /****************************************/
 /* #define for FS and HS identification */
