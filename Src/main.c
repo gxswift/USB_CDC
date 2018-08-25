@@ -63,7 +63,12 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+int fputc(int ch, FILE *f)
+{
+  /* write a character to the uart1 and Loop until the end of transmission */
+	HAL_UART_Transmit(&huart1,(uint8_t *)&ch,1,20);
+  return ch;
+}
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -75,8 +80,8 @@ void SystemClock_Config(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-  uint8_t Tx_Buff[100] = "stm32 usb_cdc test\r\n";
-	uint8_t Rx_Buff[100] = {0};
+  uint8_t Tx_Buff[512] = "stm32 usb_cdc test\r\n";
+	uint8_t Rx_Buff[512] = {0};
 	uint8_t Send_Flag = 1;
 /* USER CODE END 0 */
 
@@ -110,6 +115,8 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
+ HAL_Delay(2000);
+ CDC_Transmit_HS((uint8_t*)Tx_Buff, strlen((char *)Tx_Buff));
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -119,24 +126,26 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-//		if(Send_Flag)
-//		{
-			CDC_Transmit_HS((uint8_t*)&Tx_Buff, strlen((char *)Tx_Buff));	
-		HAL_Delay(1000);
-//			Send_Flag = 0;
-//		}
-		/*
-		USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)&Rx_Buff);
-
+		if(Send_Flag)
+		{
+			CDC_Transmit_HS((uint8_t*)Tx_Buff, strlen((char *)Tx_Buff));	
+//			CDC_Transmit_HS((uint8_t*)Rx_Buff, strlen((char *)Rx_Buff));	
+//		HAL_Delay(1000);
+			Send_Flag = 0;
+		}
+		
+				memset(Rx_Buff,0,100);	
+		USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)Rx_Buff);
 		USBD_CDC_ReceivePacket(&hUsbDeviceHS);
 
 		if(Rx_Buff[0])
 		{
-			sprintf((char *)Tx_Buff,"Received:%s\r\n",Rx_Buff);
-			memset(Rx_Buff,0,40);
+			sprintf((char *)Tx_Buff,"\r\nReceived:%s",Rx_Buff);
+//			printf("\r\nReceived:%s",Rx_Buff);
+
 			Send_Flag = 1;
 		}
-		*/
+		
   }
   /* USER CODE END 3 */
 
