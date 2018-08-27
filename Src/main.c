@@ -82,7 +82,6 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
   uint8_t Tx_Buff[512] = "stm32 usb_cdc test\r\n";
 	uint8_t Rx_Buff[512] = {0};
-	uint8_t Send_Flag = 1;
 /* USER CODE END 0 */
 
 int main(void)
@@ -126,25 +125,10 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-		if(Send_Flag)
-		{
-			CDC_Transmit_HS((uint8_t*)Tx_Buff, strlen((char *)Tx_Buff));	
-//			CDC_Transmit_HS((uint8_t*)Rx_Buff, strlen((char *)Rx_Buff));	
+
+//		CDC_Transmit_HS((uint8_t*)Tx_Buff, strlen((char *)Tx_Buff));	
 //		HAL_Delay(1000);
-			Send_Flag = 0;
-		}
-		
-				memset(Rx_Buff,0,100);	
-		USBD_CDC_SetRxBuffer(&hUsbDeviceHS, (uint8_t*)Rx_Buff);
-		USBD_CDC_ReceivePacket(&hUsbDeviceHS);
 
-		if(Rx_Buff[0])
-		{
-			sprintf((char *)Tx_Buff,"\r\nReceived:%s",Rx_Buff);
-//			printf("\r\nReceived:%s",Rx_Buff);
-
-			Send_Flag = 1;
-		}
 		
   }
   /* USER CODE END 3 */
